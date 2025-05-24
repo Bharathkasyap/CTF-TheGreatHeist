@@ -224,6 +224,55 @@ DeviceFileEvents
 ```
 Observation: File creation timestamp 2025-05-07T02:00:36.794406Z marked the start of the chain.
 
+## 🕒 Timeline of Events
+
+| Time (UTC)             | Event                      | Description                                          |
+|------------------------|----------------------------|------------------------------------------------------|
+| 2025-05-06T22:01:28Z   | PowerShell Execution       | Initiated by `senseir.exe` to load malware stages    |
+| 2025-05-06T22:01:58Z   | csc.exe Execution          | Built binary from source using .NET compiler         |
+| 2025-05-06T22:02:25Z   | gc_worker.exe Activity     | Harvested credentials via in-memory method           |
+| 2025-05-06T22:03:16Z   | schtasks.exe Scheduling    | Created task `UpdateHealthTelemetry` for persistence |
+| 2025-05-06T22:06:51Z   | systemreport.lnk Dropped   | Planted keylogger shortcut in Startup folder         |
+| 2025-05-06T20:23:40Z   | rundll32.exe Injection     | Code injection into memory using DLL techniques      |
+| 2025-05-07T02:00:36Z   | BitSentinelCore.exe Drop   | First malware appearance on disk                     |
+
+---
+
+## 🧠 MITRE ATT&CK Mapping
+
+| Tactic             | Technique                | ID                | Example Activity                            |
+|--------------------|--------------------------|--------------------|----------------------------------------------|
+| Execution          | User Execution           | T1204              | `senseir.exe` launching PowerShell           |
+| Defense Evasion    | Obfuscated Scripts       | T1027              | PowerShell with encoded commands             |
+| Persistence        | Registry & Task Schedule | T1053.005 / T1547.001 | Registry key and `UpdateHealthTelemetry` task |
+| Credential Access  | OS Credential Dumping    | T1003              | `gc_worker.exe` using reversible encryption  |
+| Collection         | Input Capture            | T1056              | Keylogger via `systemreport.lnk`             |
+
+---
+
+## 🛡 Incident Response & Recommendations
+
+### ✅ Containment Steps
+- Isolated `anthony-001` from the network  
+- Disabled malicious scheduled task  
+- Deleted `BitSentinelCore.exe`, `systemreport.lnk`  
+- Removed registry-based persistence keys  
+
+### 🗃 Forensic Preservation
+- Exported MDE logs and memory captures  
+- Archived all artifact hashes and paths  
+
+### 🔐 Recommendations
+- Implement AppLocker or WDAC to block LOLBins like `csc.exe`  
+- Enable PowerShell transcription and command logging  
+- Monitor `%Startup%` paths and Run registry keys  
+- Regularly audit scheduled tasks across all endpoints  
+- Train users to recognize disguised internal malware  
+- Use EDR with behavior-based detection and alerting  
+
+
+
+
 
 **🕒 Timeline of Events**
 Time (UTC)	Event	Description
