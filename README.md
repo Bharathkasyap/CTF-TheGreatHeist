@@ -103,6 +103,28 @@ An eccentric IT admin unknowingly triggered a stealthy multi-stage attack. The m
 
 ----
 
+## 🧾 Tables Used to Detect IoCs (Indicators of Compromise)
+
+| Parameter              | Name                   | Info                                | Purpose                                                                 |
+|------------------------|------------------------|-------------------------------------|-------------------------------------------------------------------------|
+| DeviceProcessEvents    | Process Execution Logs | [Docs – DeviceProcessEvents](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/microsoft-365-defender-advanced-hunting-deviceprocessevents-table) | Trace malware execution, parent-child chains, scheduled task creation, and persistence |
+| DeviceFileEvents       | File Creation Logs     | [Docs – DeviceFileEvents](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/microsoft-365-defender-advanced-hunting-devicefileevents-table) | Detect malware drops (e.g., `BitSentinelCore.exe`), keylogger files, and `.lnk` artifacts |
+| DeviceRegistryEvents   | Registry Persistence   | [Docs – DeviceRegistryEvents](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/microsoft-365-defender-advanced-hunting-deviceregistryevents-table) | Identify registry-based persistence (`Run`, `RunOnce` keys) |
+| DeviceNetworkEvents    | Network Connections    | [Docs – DeviceNetworkEvents](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/microsoft-365-defender-advanced-hunting-devicenetworkevents-table) | *(Optional)* Monitor outbound C2 (Command & Control) behavior |
+| DeviceImageLoadEvents  | DLL Injection Tracing  | [Docs – DeviceImageLoadEvents](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/microsoft-365-defender-advanced-hunting-deviceimageloadevents-table) | Validate stealthy DLL injections (e.g., `rundll32` loading `PcaSvc.dll`) tied to memory execution |
+
+---
+
+## 🛠️ Tools Used
+
+- **Microsoft Defender for Endpoint (MDE)**  
+  Used for real-time threat telemetry, process tracking, and artifact correlation
+
+- **KQL (Kusto Query Language)**  
+  Used for advanced threat hunting, log correlation, timeline generation, and MITRE mapping
+
+
+---
 
 ## 🔍 Threat Hunting Methodology
 
