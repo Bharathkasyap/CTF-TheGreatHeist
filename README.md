@@ -107,11 +107,11 @@ An eccentric IT admin unknowingly triggered a stealthy multi-stage attack. The m
 
 | Parameter              | Name                   | Info                                | Purpose                                                                 |
 |------------------------|------------------------|-------------------------------------|-------------------------------------------------------------------------|
-| DeviceProcessEvents    | Process Execution Logs | [Docs – DeviceProcessEvents](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/microsoft-365-defender-advanced-hunting-deviceprocessevents-table) | Trace malware execution, parent-child chains, scheduled task creation, and persistence |
-| DeviceFileEvents       | File Creation Logs     | [Docs – DeviceFileEvents](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/microsoft-365-defender-advanced-hunting-devicefileevents-table) | Detect malware drops (e.g., `BitSentinelCore.exe`), keylogger files, and `.lnk` artifacts |
-| DeviceRegistryEvents   | Registry Persistence   | [Docs – DeviceRegistryEvents](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/microsoft-365-defender-advanced-hunting-deviceregistryevents-table) | Identify registry-based persistence (`Run`, `RunOnce` keys) |
-| DeviceNetworkEvents    | Network Connections    | [Docs – DeviceNetworkEvents](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/microsoft-365-defender-advanced-hunting-devicenetworkevents-table) | *(Optional)* Monitor outbound C2 (Command & Control) behavior |
-| DeviceImageLoadEvents  | DLL Injection Tracing  | [Docs – DeviceImageLoadEvents](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/microsoft-365-defender-advanced-hunting-deviceimageloadevents-table) | Validate stealthy DLL injections (e.g., `rundll32` loading `PcaSvc.dll`) tied to memory execution |
+| DeviceProcessEvents    | Process Execution Logs | [Docs – DeviceProcessEvents](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-deviceprocessevents-table) | Trace malware execution, parent-child chains, scheduled task creation, and persistence |
+| DeviceFileEvents       | File Creation Logs     | [Docs – DeviceFileEvents](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-devicefileevents-table) | Detect malware drops (e.g., `BitSentinelCore.exe`), keylogger files, and `.lnk` artifacts |
+| DeviceRegistryEvents   | Registry Persistence   | [Docs – DeviceRegistryEvents](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-deviceregistryevents-table) | Identify registry-based persistence (`Run`, `RunOnce` keys) |
+| DeviceNetworkEvents    | Network Connections    | [Docs – DeviceNetworkEvents](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-devicenetworkevents-table) | *(Optional)* Monitor outbound C2 (Command & Control) behavior |
+| DeviceImageLoadEvents  | DLL Injection Tracing  | [Docs – DeviceImageLoadEvents](https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-deviceimageloadevents-table) | Validate stealthy DLL injections (e.g., `rundll32` loading `PcaSvc.dll`) tied to memory execution |
 
 ---
 
@@ -122,7 +122,6 @@ An eccentric IT admin unknowingly triggered a stealthy multi-stage attack. The m
 
 - **KQL (Kusto Query Language)**  
   Used for advanced threat hunting, log correlation, timeline generation, and MITRE mapping
-
 
 ---
 
@@ -151,7 +150,7 @@ DeviceProcessEvents
 | where FileName startswith 'a' or FileName startswith 'b' or FileName startswith 'c'
 | project Timestamp, DeviceName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessFileName
 ```
-<img width="1212" alt="image" src="./step_1.png">
+<img width="1212" alt="image" src=".src/step_1.png">
 
 
 ### Observation: 
@@ -184,7 +183,8 @@ DeviceProcessEvents
 | where FileName == "BitSentinelCore.exe"
 | project Timestamp, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName
 ```
-Observation: User 4nth0ny! manually executed the binary.
+### Observation: 
+User 4nth0ny! manually executed the binary.
 
 ### Flag 4 – Keylogger Artifact
 
@@ -197,7 +197,8 @@ DeviceFileEvents
 | where InitiatingProcessFileName contains "explorer.exe"
 | project Timestamp, FileName, FolderPath, InitiatingProcessFileName, ActionType
 ```
-Observation: systemreport.lnk placed in Startup folder — tied to AutoHotkey keylogger.
+### Observation: 
+systemreport.lnk placed in Startup folder — tied to AutoHotkey keylogger.
 
 ### Flag 5 – Registry-Based Persistence
 
@@ -209,7 +210,8 @@ DeviceRegistryEvents
 | where RegistryKey has_any ("Run", "RunOnce")
 | project Timestamp, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName
 ```
-Observation: Registry Run key pointing to systemreport.lnk confirmed registry persistence.
+### Observation: 
+Registry Run key pointing to systemreport.lnk confirmed registry persistence.
 
 ### Flag 6 – Scheduled Task Persistence
 
@@ -222,7 +224,8 @@ DeviceProcessEvents
 | project Timestamp, InitiatingProcessFileName, ProcessCommandLine
 | sort by Timestamp desc
 ```
-Observation: Task UpdateHealthTelemetry was created to ensure silent re-execution of the payload.
+### Observation: 
+Task UpdateHealthTelemetry was created to ensure silent re-execution of the payload.
 
 ### Flag 7 – Process Spawn Chain
 
@@ -235,7 +238,8 @@ DeviceProcessEvents
 | project Timestamp, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp asc
 ```
-Observation: Full process chain: gc_worker.exe → BitSentinelCore.exe → cmd.exe → schtasks.exe.
+### Observation: 
+Full process chain: gc_worker.exe → BitSentinelCore.exe → cmd.exe → schtasks.exe.
 
 ### Flag 8 – Root Cause Timestamp
 
@@ -248,7 +252,8 @@ DeviceFileEvents
 | order by Timestamp asc
 | project Timestamp, DeviceName, ActionType, FileName
 ```
-Observation: File creation timestamp 2025-05-07T02:00:36.794406Z marked the start of the chain.
+### Observation: 
+File creation timestamp 2025-05-07T02:00:36.794406Z marked the start of the chain.
 
 ## 🕒 Timeline of Events
 
