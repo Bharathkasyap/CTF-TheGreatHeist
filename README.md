@@ -5,11 +5,6 @@
 </p>
 
 <p align="center">
-  <img src="https://media.giphy.com/media/kQH61fV8d2g7k/giphy.gif" width="700" alt="CTF Cybersecurity Animation"/>
-</p>
-
-
-<p align="center">
   <strong>Multi-Stage Malware Detection and Attribution | Red vs. Blue Simulation</strong>
 </p>
 
