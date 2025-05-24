@@ -1,7 +1,7 @@
 <h1 align="center" style="font-size:2.5rem;">🕵️‍♂️ The Great Admin Heist – CTF Forensic Analysis</h1>
 
 <p align="center">
-  <img src="https://media.giphy.com/media/kQH61fV8d2g7k/giphy.gif" width="650" alt="CTF Investigation Banner"/>
+  <img src="https://github.com/Bharathkasyap/The-Great-Admin-Heist-CTF/blob/main/src/CTF.png" width="650" alt="CTF Investigation Banner"/>
 </p>
 
 <p align="center">
