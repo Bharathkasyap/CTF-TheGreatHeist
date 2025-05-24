@@ -128,7 +128,7 @@ DeviceProcessEvents
 | where FileName endswith ".exe" or ProcessCommandLine has ".exe"
 | where FileName startswith 'a' or FileName startswith 'b' or FileName startswith 'c'
 | project Timestamp, DeviceName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessFileName
-
+```
 Observation: BitSentinelCore.exe was executed by explorer.exe, suggesting manual execution by the user.
 
 ---
@@ -142,6 +142,7 @@ DeviceFileEvents
 | where DeviceName == "anthony-001"
 | where FileName == "BitSentinelCore.exe"
 | project Timestamp, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, ReportId
+```
 
 Observation: The malware was compiled on the system using csc.exe, not downloaded—classic LOLBin misuse.
 
@@ -156,7 +157,7 @@ DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where FileName == "BitSentinelCore.exe"
 | project Timestamp, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName
-
+```
 Observation: User 4nth0ny! manually executed the binary.
 
 ### Flag 4 – Keylogger Artifact
@@ -169,7 +170,7 @@ DeviceFileEvents
 | where FileName has_any("key", "log", "input", "lnk")
 | where InitiatingProcessFileName contains "explorer.exe"
 | project Timestamp, FileName, FolderPath, InitiatingProcessFileName, ActionType
-
+```
 Observation: systemreport.lnk placed in Startup folder — tied to AutoHotkey keylogger.
 
 ### Flag 5 – Registry-Based Persistence
@@ -181,7 +182,7 @@ DeviceRegistryEvents
 | where Timestamp > ago(30d)
 | where RegistryKey has_any ("Run", "RunOnce")
 | project Timestamp, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName
-
+```
 Observation: Registry Run key pointing to systemreport.lnk confirmed registry persistence.
 
 ### Flag 6 – Scheduled Task Persistence
@@ -194,7 +195,7 @@ DeviceProcessEvents
 | where ProcessCommandLine contains "schtasks" or ProcessCommandLine contains "Schedule.Service"
 | project Timestamp, InitiatingProcessFileName, ProcessCommandLine
 | sort by Timestamp desc
-
+```
 Observation: Task UpdateHealthTelemetry was created to ensure silent re-execution of the payload.
 
 ### Flag 7 – Process Spawn Chain
@@ -207,7 +208,7 @@ DeviceProcessEvents
 | where ProcessCommandLine has "schtasks" or ProcessCommandLine has "/Create"
 | project Timestamp, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp asc
-
+```
 Observation: Full process chain: gc_worker.exe → BitSentinelCore.exe → cmd.exe → schtasks.exe.
 
 ### Flag 8 – Root Cause Timestamp
@@ -220,11 +221,11 @@ DeviceFileEvents
 | where FileName == "BitSentinelCore.exe"
 | order by Timestamp asc
 | project Timestamp, DeviceName, ActionType, FileName
-
+```
 Observation: File creation timestamp 2025-05-07T02:00:36.794406Z marked the start of the chain.
 
 
-🕒 Timeline of Events
+**🕒 Timeline of Events**
 Time (UTC)	Event	Description
 2025-05-06T22:01:28Z	PowerShell Execution	Initiated by senseir.exe to load stages
 2025-05-06T22:01:58Z	csc.exe Execution	Built binary from source on host
@@ -234,7 +235,7 @@ Time (UTC)	Event	Description
 2025-05-06T20:23:40Z	rundll32.exe Injection	Earliest code injection marker in memory
 2025-05-07T02:00:36Z	BitSentinelCore.exe Drop	Confirmed start of malware lifecycle
 
-🧠 MITRE ATT&CK Mapping
+**🧠 MITRE ATT&CK Mapping**
 Tactic	Technique	ID	Example
 Execution	User Execution	T1204	senseir.exe triggering PowerShell
 Defense Evasion	Obfuscated Files/Scripts	T1027	EncodedCommand in PowerShell
@@ -242,7 +243,7 @@ Persistence	Scheduled Task / Registry	T1053.005 / T1547.001	UpdateHealthTelemetr
 Credential Access	OS Credential Dumping	T1003	gc_worker.exe with reversible encryption flags
 Collection	Input Capture	T1056	systemreport.lnk keylogging activity
 
-🛡️ Incident Response & Recommendations
+**🛡️ Incident Response & Recommendations**
 ✅ Containment Steps
 Isolated anthony-001 from the network
 
