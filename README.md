@@ -117,15 +117,8 @@ An eccentric IT admin unknowingly triggered a stealthy multi-stage attack. The m
 ## 🧩 Flags and KQL Analysis
 
 **Detect Execution:**
-```kusto
-DeviceProcessEvents
-| where DeviceName == "anthony-001"
-| where FileName == "BitSentinelCore.exe"
 
----
-
-<details>
-<summary><strong>Flag 1 – Suspicious Antivirus Discovery</strong></summary>
+### Flag 1 – Suspicious Antivirus Discovery
 
 ```kusto
 DeviceProcessEvents
@@ -135,9 +128,13 @@ DeviceProcessEvents
 | where FileName endswith ".exe" or ProcessCommandLine has ".exe"
 | where FileName startswith 'a' or FileName startswith 'b' or FileName startswith 'c'
 | project Timestamp, DeviceName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessFileName
+
 Observation: BitSentinelCore.exe was executed by explorer.exe, suggesting manual execution by the user.
 
-</details> <details> <summary><strong>Flag 2 – Malicious File Dropped</strong></summary>
+---
+
+
+### Flag 2 – Malicious File Dropped
 
 ```kusto
 DeviceFileEvents
@@ -145,9 +142,12 @@ DeviceFileEvents
 | where DeviceName == "anthony-001"
 | where FileName == "BitSentinelCore.exe"
 | project Timestamp, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, ReportId
+
 Observation: The malware was compiled on the system using csc.exe, not downloaded—classic LOLBin misuse.
 
-</details> <details> <summary><strong>Flag 3 – Execution Confirmation</strong></summary>
+---
+
+### Flag 3 – Execution Confirmation
 
 ```kusto
 
@@ -156,9 +156,10 @@ DeviceProcessEvents
 | where Timestamp > ago(30d)
 | where FileName == "BitSentinelCore.exe"
 | project Timestamp, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName
+
 Observation: User 4nth0ny! manually executed the binary.
 
-</details> <details> <summary><strong>Flag 4 – Keylogger Artifact</strong></summary>
+### Flag 4 – Keylogger Artifact
 
 ```kusto
 
@@ -168,9 +169,10 @@ DeviceFileEvents
 | where FileName has_any("key", "log", "input", "lnk")
 | where InitiatingProcessFileName contains "explorer.exe"
 | project Timestamp, FileName, FolderPath, InitiatingProcessFileName, ActionType
+
 Observation: systemreport.lnk placed in Startup folder — tied to AutoHotkey keylogger.
 
-</details> <details> <summary><strong>Flag 5 – Registry-Based Persistence</strong></summary>
+### Flag 5 – Registry-Based Persistence
 
 ```kusto
 
@@ -179,9 +181,10 @@ DeviceRegistryEvents
 | where Timestamp > ago(30d)
 | where RegistryKey has_any ("Run", "RunOnce")
 | project Timestamp, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName
+
 Observation: Registry Run key pointing to systemreport.lnk confirmed registry persistence.
 
-</details> <details> <summary><strong>Flag 6 – Scheduled Task Persistence</strong></summary>
+### Flag 6 – Scheduled Task Persistence
 
 ```kusto
 
@@ -191,9 +194,10 @@ DeviceProcessEvents
 | where ProcessCommandLine contains "schtasks" or ProcessCommandLine contains "Schedule.Service"
 | project Timestamp, InitiatingProcessFileName, ProcessCommandLine
 | sort by Timestamp desc
+
 Observation: Task UpdateHealthTelemetry was created to ensure silent re-execution of the payload.
 
-</details> <details> <summary><strong>Flag 7 – Process Spawn Chain</strong></summary>
+### Flag 7 – Process Spawn Chain
 
 ```kusto
 
@@ -203,9 +207,10 @@ DeviceProcessEvents
 | where ProcessCommandLine has "schtasks" or ProcessCommandLine has "/Create"
 | project Timestamp, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp asc
+
 Observation: Full process chain: gc_worker.exe → BitSentinelCore.exe → cmd.exe → schtasks.exe.
 
-</details> <details> <summary><strong>Flag 8 – Root Cause Timestamp</strong></summary>
+### Flag 8 – Root Cause Timestamp
 
 ```kusto
 
@@ -215,9 +220,9 @@ DeviceFileEvents
 | where FileName == "BitSentinelCore.exe"
 | order by Timestamp asc
 | project Timestamp, DeviceName, ActionType, FileName
+
 Observation: File creation timestamp 2025-05-07T02:00:36.794406Z marked the start of the chain.
 
-</details>
 
 🕒 Timeline of Events
 Time (UTC)	Event	Description
