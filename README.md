@@ -24,6 +24,74 @@ An eccentric IT admin unknowingly triggered a stealthy multi-stage attack. The m
 
 ## 🚩 Flags & Key Findings
 
+<details>
+<summary><strong>1. Suspicious Antivirus Discovery</strong></summary>
+
+- Malware disguised as `BitSentinelCore.exe` mimicked legitimate antivirus software  
+- Detected via file naming and process behavior
+
+</details>
+
+<details>
+<summary><strong>2. Malicious File Dropped</strong></summary>
+
+- File was locally **compiled** using `csc.exe` (not downloaded)  
+- Demonstrates **Living off the Land Binary (LOLBins)** technique
+
+</details>
+
+<details>
+<summary><strong>3. Execution Confirmation</strong></summary>
+
+- Manual execution confirmed via `explorer.exe`  
+- Indicates user deception or insider threat
+
+</details>
+
+<details>
+<summary><strong>4. Keylogger Artifact</strong></summary>
+
+- `.lnk` file dropped into Startup folder named `systemreport.lnk`  
+- Tied to keylogger like `AutoHotkeyU32.exe`
+
+</details>
+
+<details>
+<summary><strong>5. Registry-Based Persistence</strong></summary>
+
+- Malware added itself under `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`  
+- Enables re-execution on reboot or login
+
+</details>
+
+<details>
+<summary><strong>6. Scheduled Task Persistence</strong></summary>
+
+- Created task `UpdateHealthTelemetry` using `schtasks.exe`  
+- Ensured ongoing access even after reboots
+
+</details>
+
+<details>
+<summary><strong>7. Process Spawn Chain</strong></summary>
+
+- Chain observed: `gc_worker.exe → BitSentinelCore.exe → cmd.exe → schtasks.exe`  
+- Used trusted system binaries for evasion
+
+</details>
+
+<details>
+<summary><strong>8. Root Cause Timeline</strong></summary>
+
+- Root timestamp: `2025-05-06T21:00`  
+- Confirmed via file creation of `BitSentinelCore.exe`
+
+</details>
+
+----
+
+## 🚩 Flags & Key Findings
+
 ### 1. **Suspicious Antivirus Discovery**
 - Malware disguised as `BitSentinelCore.exe` mimicked legitimate antivirus software
 - Detected via file naming and process behavior
