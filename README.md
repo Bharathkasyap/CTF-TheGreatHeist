@@ -1,13 +1,3 @@
-# 🕵️‍♂️ The Great Admin Heist – CTF Forensic Analysis
-
-**Project Title:** Multi-Stage Malware Detection and Attribution  
-**Analyst:** Venkata Bharath Devulapalli  
-**Target System:** Acme Corp Endpoint (`anthony-001`)  
-**Simulated Threat Actor:** The Phantom Hackers (APT Simulation)  
-**Platform Used:** Microsoft Defender for Endpoint (MDE)  
-**Date Completed:** May 19, 2025
-
----
 <h1 align="center" style="font-size:2.5rem;">🕵️‍♂️ The Great Admin Heist – CTF Forensic Analysis</h1>
 
 <p align="center">
@@ -26,7 +16,7 @@
 
 <p align="center">
   <b>Platform Used:</b> Microsoft Defender for Endpoint (MDE) &nbsp;|&nbsp;
-  <b>Date Completed:</b> May 19, 2025
+  <b>Date Completed:</b> May 17, 2025
 </p>
 
 <hr>
