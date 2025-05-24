@@ -150,7 +150,7 @@ DeviceProcessEvents
 | where FileName startswith 'a' or FileName startswith 'b' or FileName startswith 'c'
 | project Timestamp, DeviceName, FileName, FolderPath, ProcessCommandLine, InitiatingProcessAccountName, InitiatingProcessFileName
 ```
-<img width="1212" alt="image" src=".src/step_1.png">
+<img width="1212" alt="image" src="https://github.com/Bharathkasyap/The-Great-Admin-Heist-CTF/blob/main/src/step1.png">
 
 
 ### Observation: 
