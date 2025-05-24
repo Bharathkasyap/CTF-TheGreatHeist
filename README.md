@@ -8,11 +8,34 @@
 **Date Completed:** May 19, 2025
 
 ---
+<h1 align="center" style="font-size:2.5rem;">🕵️‍♂️ The Great Admin Heist – CTF Forensic Analysis</h1>
+
+<p align="center">
+  <img src="https://media.giphy.com/media/kQH61fV8d2g7k/giphy.gif" width="650" alt="CTF Investigation Banner"/>
+</p>
+
+<p align="center">
+  <strong>Multi-Stage Malware Detection and Attribution | Red vs. Blue Simulation</strong>
+</p>
+
+<p align="center">
+  <b>Analyst:</b> Venkata Bharath Devulapalli &nbsp;|&nbsp;
+  <b>Target System:</b> <code>anthony-001</code> &nbsp;|&nbsp;
+  <b>Threat Actor:</b> The Phantom Hackers (Simulated APT)  
+</p>
+
+<p align="center">
+  <b>Platform Used:</b> Microsoft Defender for Endpoint (MDE) &nbsp;|&nbsp;
+  <b>Date Completed:</b> May 19, 2025
+</p>
+
+<hr>
+---
 
 ## 🧠 Objective
 
 Investigate a simulated APT attack by "The Phantom Hackers" against Acme Corp.  
-Analyze how a fake antivirus (`BitSentinelCore.exe`) gained access, persisted, and maintained control over the endpoint.
+Analyze how a fake antivirus gained access, persisted, and maintained control over the endpoint.
 
 ---
 
@@ -90,41 +113,6 @@ An eccentric IT admin unknowingly triggered a stealthy multi-stage attack. The m
 
 ----
 
-## 🚩 Flags & Key Findings
-
-### 1. **Suspicious Antivirus Discovery**
-- Malware disguised as `BitSentinelCore.exe` mimicked legitimate antivirus software
-- Detected via file naming and process behavior
-
-### 2. **Malicious File Dropped**
-- File was locally **compiled** using `csc.exe` (not downloaded)
-- Demonstrates **Living off the Land Binary (LOLBins)** technique
-
-### 3. **Execution Confirmation**
-- Manual execution confirmed via `explorer.exe`
-- Indicates user deception or insider threat
-
-### 4. **Keylogger Artifact**
-- `.lnk` file dropped into Startup folder named `systemreport.lnk`
-- Tied to keylogger like `AutoHotkeyU32.exe`
-
-### 5. **Registry-Based Persistence**
-- Malware added itself under `HKCU\Software\Microsoft\Windows\CurrentVersion\Run`
-- Enables re-execution on reboot or login
-
-### 6. **Scheduled Task Persistence**
-- Created task `UpdateHealthTelemetry` using `schtasks.exe`
-- Ensured ongoing access even after reboots
-
-### 7. **Process Spawn Chain**
-- Chain observed: `gc_worker.exe → BitSentinelCore.exe → cmd.exe → schtasks.exe`
-- Used trusted system binaries for evasion
-
-### 8. **Root Cause Timeline**
-- Root timestamp: `2025-05-06T21:00`  
-- Confirmed via file creation of `BitSentinelCore.exe`
-
----
 
 ## 🔍 Threat Hunting Methodology
 
