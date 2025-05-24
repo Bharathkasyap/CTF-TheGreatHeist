@@ -168,6 +168,7 @@ DeviceFileEvents
 | where FileName == "BitSentinelCore.exe"
 | project Timestamp, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine, ReportId
 ```
+<img width="1212" alt="image" src="https://github.com/Bharathkasyap/The-Great-Admin-Heist-CTF/blob/main/src/step2.png">
 
 Observation: The malware was compiled on the system using csc.exe, not downloaded—classic LOLBin misuse.
 
@@ -183,6 +184,8 @@ DeviceProcessEvents
 | where FileName == "BitSentinelCore.exe"
 | project Timestamp, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine, AccountName
 ```
+<img width="1212" alt="image" src="https://github.com/Bharathkasyap/The-Great-Admin-Heist-CTF/blob/main/src/step3.png">
+
 ### Observation: 
 User 4nth0ny! manually executed the binary.
 
@@ -197,6 +200,8 @@ DeviceFileEvents
 | where InitiatingProcessFileName contains "explorer.exe"
 | project Timestamp, FileName, FolderPath, InitiatingProcessFileName, ActionType
 ```
+<img width="1212" alt="image" src="https://github.com/Bharathkasyap/The-Great-Admin-Heist-CTF/blob/main/src/step4.png">
+
 ### Observation: 
 systemreport.lnk placed in Startup folder — tied to AutoHotkey keylogger.
 
@@ -210,6 +215,8 @@ DeviceRegistryEvents
 | where RegistryKey has_any ("Run", "RunOnce")
 | project Timestamp, RegistryKey, RegistryValueName, RegistryValueData, InitiatingProcessFileName
 ```
+<img width="1212" alt="image" src="https://github.com/Bharathkasyap/The-Great-Admin-Heist-CTF/blob/main/src/step5.png">
+
 ### Observation: 
 Registry Run key pointing to systemreport.lnk confirmed registry persistence.
 
@@ -224,6 +231,8 @@ DeviceProcessEvents
 | project Timestamp, InitiatingProcessFileName, ProcessCommandLine
 | sort by Timestamp desc
 ```
+<img width="1212" alt="image" src="https://github.com/Bharathkasyap/The-Great-Admin-Heist-CTF/blob/main/src/step6.png">
+
 ### Observation: 
 Task UpdateHealthTelemetry was created to ensure silent re-execution of the payload.
 
@@ -238,6 +247,8 @@ DeviceProcessEvents
 | project Timestamp, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine
 | order by Timestamp asc
 ```
+<img width="1212" alt="image" src="https://github.com/Bharathkasyap/The-Great-Admin-Heist-CTF/blob/main/src/step7.png">
+
 ### Observation: 
 Full process chain: gc_worker.exe → BitSentinelCore.exe → cmd.exe → schtasks.exe.
 
@@ -252,6 +263,8 @@ DeviceFileEvents
 | order by Timestamp asc
 | project Timestamp, DeviceName, ActionType, FileName
 ```
+<img width="1212" alt="image" src="https://github.com/Bharathkasyap/The-Great-Admin-Heist-CTF/blob/main/src/step8.png">
+
 ### Observation: 
 File creation timestamp 2025-05-07T02:00:36.794406Z marked the start of the chain.
 
