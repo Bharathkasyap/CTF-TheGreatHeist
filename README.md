@@ -114,7 +114,7 @@ An eccentric IT admin unknowingly triggered a stealthy multi-stage attack. The m
 
 ---
 
-## 🧪 Sample KQL Queries
+## 🧩 Flags and KQL Analysis
 
 **Detect Execution:**
 ```kusto
@@ -124,12 +124,9 @@ DeviceProcessEvents
 
 ---
 
-## 🧩 Flags and KQL Analysis
-
 <details>
 <summary><strong>Flag 1 – Suspicious Antivirus Discovery</strong></summary>
 
-**KQL:**
 ```kusto
 DeviceProcessEvents
 | where Timestamp > ago(30d)
@@ -141,11 +138,8 @@ DeviceProcessEvents
 Observation: BitSentinelCore.exe was executed by explorer.exe, suggesting manual execution by the user.
 
 </details> <details> <summary><strong>Flag 2 – Malicious File Dropped</strong></summary>
-KQL:
 
-kusto
-Copy
-Edit
+```kusto
 DeviceFileEvents
 | where Timestamp > ago(30d)
 | where DeviceName == "anthony-001"
@@ -154,11 +148,9 @@ DeviceFileEvents
 Observation: The malware was compiled on the system using csc.exe, not downloaded—classic LOLBin misuse.
 
 </details> <details> <summary><strong>Flag 3 – Execution Confirmation</strong></summary>
-KQL:
 
-kusto
-Copy
-Edit
+```kusto
+
 DeviceProcessEvents
 | where DeviceName == "anthony-001"
 | where Timestamp > ago(30d)
@@ -167,11 +159,9 @@ DeviceProcessEvents
 Observation: User 4nth0ny! manually executed the binary.
 
 </details> <details> <summary><strong>Flag 4 – Keylogger Artifact</strong></summary>
-KQL:
 
-kusto
-Copy
-Edit
+```kusto
+
 DeviceFileEvents
 | where DeviceName == "anthony-001"
 | where Timestamp > ago(30d)
@@ -181,11 +171,9 @@ DeviceFileEvents
 Observation: systemreport.lnk placed in Startup folder — tied to AutoHotkey keylogger.
 
 </details> <details> <summary><strong>Flag 5 – Registry-Based Persistence</strong></summary>
-KQL:
 
-kusto
-Copy
-Edit
+```kusto
+
 DeviceRegistryEvents
 | where DeviceName == "anthony-001"
 | where Timestamp > ago(30d)
@@ -194,11 +182,9 @@ DeviceRegistryEvents
 Observation: Registry Run key pointing to systemreport.lnk confirmed registry persistence.
 
 </details> <details> <summary><strong>Flag 6 – Scheduled Task Persistence</strong></summary>
-KQL:
 
-kusto
-Copy
-Edit
+```kusto
+
 DeviceProcessEvents
 | where DeviceName == "anthony-001"
 | where Timestamp > ago(30d)
@@ -208,11 +194,9 @@ DeviceProcessEvents
 Observation: Task UpdateHealthTelemetry was created to ensure silent re-execution of the payload.
 
 </details> <details> <summary><strong>Flag 7 – Process Spawn Chain</strong></summary>
-KQL:
 
-kusto
-Copy
-Edit
+```kusto
+
 DeviceProcessEvents
 | where DeviceName == "anthony-001"
 | where Timestamp > ago(30d)
@@ -222,11 +206,9 @@ DeviceProcessEvents
 Observation: Full process chain: gc_worker.exe → BitSentinelCore.exe → cmd.exe → schtasks.exe.
 
 </details> <details> <summary><strong>Flag 8 – Root Cause Timestamp</strong></summary>
-KQL:
 
-kusto
-Copy
-Edit
+```kusto
+
 DeviceFileEvents
 | where DeviceName == "anthony-001"
 | where Timestamp > ago(30d)
@@ -236,6 +218,7 @@ DeviceFileEvents
 Observation: File creation timestamp 2025-05-07T02:00:36.794406Z marked the start of the chain.
 
 </details>
+
 🕒 Timeline of Events
 Time (UTC)	Event	Description
 2025-05-06T22:01:28Z	PowerShell Execution	Initiated by senseir.exe to load stages
